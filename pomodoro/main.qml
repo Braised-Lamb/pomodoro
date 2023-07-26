@@ -9,7 +9,7 @@ Window {
     width: 300
     height: 300
     title: qsTr("pomodoro")
-    //color: Qt.rgba(0.5,0.5,0.5,0.5)
+    color: Qt.rgba(0.5,0.5,0.5,0.5)
 
     Component.onCompleted: {
         // 设置样式主题为 Material

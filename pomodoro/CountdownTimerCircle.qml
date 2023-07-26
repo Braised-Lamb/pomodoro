@@ -7,7 +7,8 @@ Item {
 
     visible: true
     width: 200
-    height:200
+    height:250
+    property int offset:25
 
     property int totalTime: 60 // 倒计时的总时间，单位为秒
     property int remainingTime: totalTime
@@ -34,7 +35,7 @@ Item {
         onPaint: {
             var ctx = getContext("2d");
             var centerX = width / 2;
-            var centerY = height / 2;
+            var centerY = height / 2 - offset;
             var radius = Math.min(centerX, centerY) - 5;
             var startAngle = -Math.PI / 2; // 从12点方向开始
             var endAngle = Math.PI * 2 * progress + startAngle;
@@ -55,7 +56,9 @@ Item {
     }
 
     Text {
+        // 将锚点设置为(0.5, 0.5)以使中心点居中
         anchors.centerIn: parent
+        anchors.verticalCenterOffset: -offset
         font.pixelSize: 24
         text: remainingTime.toString()
     }
@@ -64,7 +67,7 @@ Item {
         anchors {
             horizontalCenter: parent.horizontalCenter
             bottom: parent.bottom
-            bottomMargin: 50
+            bottomMargin: 5
         }
         text: countdownTimer.running ? "停止" : "开始"
         onClicked: {
