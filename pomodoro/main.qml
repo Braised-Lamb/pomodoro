@@ -35,7 +35,7 @@ Window {
         Button {
             id: setEndTime
             text: "End Time"
-            //onClicked: alarmDialog.open()
+            onClicked: clockDialog.open()
         }   
 
         Button {
@@ -53,5 +53,9 @@ Window {
         totalTime: 60 // 设置倒计时总时间，单位为秒
     }
 
-
+    ClockDialog {
+        id: clockDialog
+        x: Math.round((parent.width - width) / 2)
+        y: Math.round((parent.height - height) / 2)
+    }
 }

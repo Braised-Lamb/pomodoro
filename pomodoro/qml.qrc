@@ -2,5 +2,8 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>CountdownTimerCircle.qml</file>
+        <file>ClockDialog.qml</file>
+        <file>TumblerDelegate.qml</file>
+        <file>qtquickcontrols2.conf</file>
     </qresource>
 </RCC>

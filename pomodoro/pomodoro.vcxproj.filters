@@ -37,5 +37,11 @@
     <None Include="CountdownTimerCircle.qml">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="ClockDialog.qml">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="TumblerDelegate.qml">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

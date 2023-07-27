@@ -84,7 +84,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <None Include="TumblerDelegate.qml" />
     <QtRcc Include="qml.qrc" />
+    <None Include="ClockDialog.qml" />
     <None Include="CountdownTimerCircle.qml" />
     <None Include="main.qml" />
   </ItemGroup>
