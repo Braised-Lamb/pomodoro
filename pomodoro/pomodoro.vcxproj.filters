@@ -46,5 +46,11 @@
     <None Include="qtquickcontrols2.conf">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="SettingDialog.qml">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="GlobalSettings.qml">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

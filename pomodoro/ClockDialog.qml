@@ -7,7 +7,7 @@ import QtQuick.Window 2.11
 
 Dialog {
     id: clockDialog
-    title: "Select end time"
+    title: "Set End Time"
     modal: true
     standardButtons: DialogButtonBox.Ok | DialogButtonBox.Cancel
     property var startTime: new Date();
@@ -27,11 +27,12 @@ Dialog {
         var endMinute = parseInt(minuteText.text);
         endTime = (endHour*60+endMinute);
         var sTime=parseInt(startTime.getHours())*60+parseInt(startTime.getMinutes())
-        if (sTime>endTime) endTime+=24*60
-        emit:clockdialogClosed(endTime);
+        var durationTime=endTime-sTime;
+        if (durationTime<=0) durationTime+=24*60
+        emit:clockdialogClosed(durationTime);
     }
     onRejected: {
-        emit:clockdialogClosed(endTime);
+        //emit:clockdialogClosed(endTime);
     }
 
     signal clockdialogClosed(int result)
