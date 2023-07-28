@@ -4,15 +4,14 @@ import QtQuick 2.9
 import QtQuick.Controls 2.4
 import QtQuick.Controls.Material 2.11
 
+
 Item {
 
     visible: true
     //width: 200
     //height:250
-    // 创建全局单例对象
-    GlobalSettings{id:settings}
 
-    property int timeInterval:1000 // 计时器间隔，提示用
+    property int timeInterval:10 // 计时器间隔，提示用
     property int offset:25
 
     property int allTime: 60
@@ -36,6 +35,11 @@ Item {
     signal pausePomodoro()
     signal stopPomodoro()
 
+    // 全局变量
+    property int globalPomodoro:25
+    property int globalBreakTime:5
+    property int globalDuration:60
+
     Timer {
         id: countdownTimer
         interval: timeInterval // 每秒触发一次计时器
@@ -48,7 +52,7 @@ Item {
                 if (focusStatus) {
                     curPomo-=1;
                     if (curPomo>0){
-                        totalTime=(settings.breakTime+correct)*60;
+                        totalTime=(globalBreakTime+correct)*60;
                         progress=1;
                         remainingTime=totalTime;
                         countdownTimer.start();
@@ -59,7 +63,7 @@ Item {
                     }
                 }
                 else {
-                    totalTime=(settings.pomodoro+correct+(curPomo>0?0:lastcorrect))*60;
+                    totalTime=(globalPomodoro+correct+(curPomo>0?0:lastcorrect))*60;
                     progress=1;
                     remainingTime=totalTime;
                     countdownTimer.start();
@@ -214,26 +218,31 @@ Item {
          
     }
 
+    onFinishPomodoro:{
+        stopButton.visible=false;
+        countButton.anchors.horizontalCenterOffset=0;
+    }
+
     function initPomo(){
-        console.log(settings.pomodoro,settings.duration,correct);
-        if (settings.pomodoro>settings.duration){
+        console.log(globalPomodoro,globalDuration,correct);
+        if (globalPomodoro>globalDuration){
             pomodoroNum=1; 
             correct=0;
             lastcorrect=0;
-            totalTime=(settings.duration+correct)*60;
+            totalTime=(globalDuration+correct)*60;
         }
         else {
-            var cycle=(settings.pomodoro+settings.breakTime)*60;
+            var cycle=(globalPomodoro+globalBreakTime)*60;
             var restTime = allTime%cycle/60;
             pomodoroNum = allTime/cycle;
-            if (restTime <= settings.pomodoro) {
+            if (restTime <= globalPomodoro) {
                 pomodoroNum+=1;
             }
             else {
                 correct=restTime/pomodoroNum;
                 lastcorrect=restTime%pomodoroNum;
             }
-            totalTime=(settings.pomodoro+correct)*60;
+            totalTime=(globalPomodoro+correct)*60;
         }
 
         remainingTime=totalTime;
@@ -241,11 +250,11 @@ Item {
         curPomo=pomodoroNum;
         canvas.requestPaint();
         console.log("painting",totalTime);
-        console.log(settings.pomodoro,settings.duration,correct);
+        console.log(globalPomodoro,globalDuration,correct);
     }
 
     function resetCount(){  
-        totalTime=settings.pomodoro*60;
+        totalTime=globalPomodoro*60;
         remainingTime=totalTime;
         pomodoroNum=1;
         progress=1;

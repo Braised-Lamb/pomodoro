@@ -9,11 +9,8 @@ Dialog {
     standardButtons: Dialog.Ok | Dialog.Cancel
     //modality: Qt.ApplicationModal
     //width: 400
-
-    // 导入GlobalSettings组件
-    GlobalSettings {
-        id: settings
-    }
+    property int pomodoroSet:25
+    property int breakTimeSet:5
 
     GridLayout{
         anchors.fill:parent
@@ -30,7 +27,7 @@ Dialog {
             //width: 100
             Layout.fillWidth: true
             validator: IntValidator { bottom: 0 }
-            text: settings.pomodoro.toString() // Default value
+            text: pomodoroSet.toString() // Default value
         }
 
         Label {
@@ -43,21 +40,22 @@ Dialog {
             //anchors.horizontalCenter:workTimeInput.horizontalCenter
             //width: 100
             validator: IntValidator { bottom: 0 }
-            text: settings.breakTime.toString() // Default value
+            text: breakTimeSet.toString() // Default value
         }
     }
-
+    signal sendPomodoro(int pomodoroValue)
+    signal sendBreakTime(int breakTimeValue)
     onAccepted: {
-        // When the dialog is accepted (OK button clicked),
-        // you can access the values entered by the user
-        var workTimeValue = parseInt(workTimeInput.text);
-        var restTimeValue = parseInt(restTimeInput.text);
+            // When the dialog is accepted (OK button clicked),
+            // you can access the values entered by the user
+            var workTimeValue = parseInt(workTimeInput.text);
+            var restTimeValue = parseInt(restTimeInput.text);
 
-        settings.pomodoro=workTimeValue;
-        settings.breakTime=restTimeValue;
-
-        // You can use these values as needed
-        console.log("Work Time:", workTimeValue, "minutes");
-        console.log("Rest Time:", restTimeValue, "minutes");
-    }
+            // You can use these values as needed
+            console.log("Work Time:", workTimeValue, "minutes");
+            console.log("Rest Time:", restTimeValue, "minutes");
+            
+            emit: sendPomodoro(workTimeValue);
+            emit: sendBreakTime(restTimeValue);
+        }
 }
