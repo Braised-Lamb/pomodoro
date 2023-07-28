@@ -43,5 +43,8 @@
     <None Include="TumblerDelegate.qml">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="qtquickcontrols2.conf">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

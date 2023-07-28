@@ -11,18 +11,14 @@ Window {
     title: qsTr("pomodoro")
     color: Qt.rgba(0.5,0.5,0.5,0.5)
 
-    Component.onCompleted: {
-        // 设置样式主题为 Material
-        Qt.application.setStyle("Material");
+    property var currentTime: ""
+    property var countTime: 25*60
 
-        // 设置 Material 风格的主题为 Dark
-        Material.theme = Material.Dark;
+    property var pomodoroTime:25
+    property var restTime:5
 
-        // 设置强调色为红色
-        Material.accent = "red";
-    }
-
-        RowLayout{
+    signal clockdialogClosed(int result)
+    RowLayout{
         id: setButtonLayout
         //anchors.centerIn: parent
         anchors.top: parent.top
@@ -30,12 +26,15 @@ Window {
         anchors.horizontalCenter: parent.horizontalCenter
         
 
-        Layout.fillWidth: true // Take all available space
+        //Layout.fillWidth: true // Take all available space
 
         Button {
             id: setEndTime
             text: "End Time"
-            onClicked: clockDialog.open()
+            onClicked: {
+                currentTime=new Date();
+                var result = clockDialog.open();
+            }
         }   
 
         Button {
@@ -46,16 +45,30 @@ Window {
     }
 
     CountdownTimerCircle {
+        id: countDownTimer
         //anchors.centerIn:parent
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: setButtonLayout.bottom // 把CountdownTimerCircle放在RowLayout下方
         anchors.topMargin: 5
-        totalTime: 60 // 设置倒计时总时间，单位为秒
+        totalTime: pomodoroTime*60 // 设置倒计时总时间，单位为秒
+        width:parent.width*2/3
+        height:parent.height*5/6
+        offset:Math.abs((height-width)/2)
     }
 
     ClockDialog {
         id: clockDialog
         x: Math.round((parent.width - width) / 2)
         y: Math.round((parent.height - height) / 2)
+        startTime: currentTime
+        width:parent.width*0.8
+        height:parent.height*0.95
+        onClockdialogClosed: {
+            console.log("Dialog closed with result:", result);
+            // 这里可以根据 result 的值执行相应的操作
+            var currentTime = new Date();
+            countDownTimer.totalTime=(result-parseInt(currentTime.getHours())*60-parseInt(currentTime.getMinutes()))*60;
+            countDownTimer.reset;
+        }
     }
 }

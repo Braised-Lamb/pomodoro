@@ -84,6 +84,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <None Include="qtquickcontrols2.conf" />
     <None Include="TumblerDelegate.qml" />
     <QtRcc Include="qml.qrc" />
     <None Include="ClockDialog.qml" />
