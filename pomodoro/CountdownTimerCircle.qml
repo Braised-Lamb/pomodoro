@@ -35,6 +35,9 @@ Item {
     signal pausePomodoro()
     signal stopPomodoro()
 
+
+    property int pointSize:16
+
     // 全局变量
     property int globalPomodoro:25
     property int globalBreakTime:5
@@ -112,6 +115,7 @@ Item {
             //ctx.stroke();
             // 填充扇形，以红色填充
             ctx.fillStyle = "#007ACC";
+            //ctx.fillStyle = "rgb(0.5,0.5,0.5,0.5)";
             ctx.fill();
 
         }
@@ -123,7 +127,7 @@ Item {
         // 将锚点设置为(0.5, 0.5)以使中心点居中
         anchors.centerIn: parent
         anchors.verticalCenterOffset: -offset
-        font.pixelSize: 48
+        font.pixelSize: pointSize*3
         font.family: "Roboto" // 设置字体为Roboto
         font.bold: true
         color: "#404040"
@@ -211,7 +215,7 @@ Item {
         }
         text:(2*(pomodoroNum-curPomo)+(focusStatus?1:0)).toString()+"/"+(pomodoroNum+pomodoroNum-1).toString()+"\tNow:"+(focusStatus?"Focus":"Break")
 
-        font.pixelSize: 18 // 设置字体大小
+        font.pixelSize: pointSize // 设置字体大小
         font.family: "Courier" // 设置字体为Roboto
         font.bold: true
         color: "#404040"
@@ -244,10 +248,12 @@ Item {
             }
             totalTime=(globalPomodoro+correct)*60;
         }
-
+        focusStatus=true;
         remainingTime=totalTime;
         progress=1;
         curPomo=pomodoroNum;
+        countdownTimer.stop();
+        countdownTimer.interval=timeInterval;
         canvas.requestPaint();
         console.log("painting",totalTime);
         console.log(globalPomodoro,globalDuration,correct);

@@ -49,7 +49,7 @@
     <None Include="SettingDialog.qml">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="GlobalSettings.qml">
+    <None Include="ColorPalette.qml">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

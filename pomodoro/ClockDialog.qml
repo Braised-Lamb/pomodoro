@@ -8,19 +8,24 @@ import QtQuick.Window 2.11
 Dialog {
     id: clockDialog
     title: "Set End Time"
+    // Custom title item
     modal: true
     standardButtons: DialogButtonBox.Ok | DialogButtonBox.Cancel
     property var startTime: new Date();
     property var endTime: 0;
+    property int pointSize: 14
 
     function formatNumber(number) {
         return number < 10 && number >= 0 ? "0" + number : number.toString()
     }
 
     onVisibleChanged: {
-        startTime=new Date();
-        hourText.text=formatNumber(startTime.getHours());
-        minuteText.text=formatNumber(startTime.getMinutes());
+        if (clockDialog.visible==true){
+            startTime=new Date();
+            hourText.text=formatNumber(startTime.getHours());
+            minuteText.text=formatNumber(startTime.getMinutes());
+        }
+
     }
     onAccepted: {
         var endHour = parseInt(hourText.text);
@@ -55,14 +60,14 @@ Dialog {
             top:title.bottom
             horizontalCenter: parent.horizontalCenter
         }
-        spacing:parent.width/10
+        spacing:pointSize*2
         Text{
             width:hoursTumbler.width
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             text:"Hour"
             font.bold: true
-            font.pointSize: 14
+            font.pointSize: pointSize
             font.family: "Roboto"
             color: "pink"
             Layout.fillWidth: true
@@ -73,7 +78,7 @@ Dialog {
             verticalAlignment: Text.AlignVCenter
             text:"Minute"
             font.bold: true
-            font.pointSize: 14
+            font.pointSize: pointSize
             font.family: "Roboto"
             color: "pink"
             Layout.fillWidth: true
@@ -88,13 +93,15 @@ Dialog {
             top:labelContainer.bottom
             horizontalCenter: parent.horizontalCenter
         }
-        spacing:parent.width/10
+        spacing:pointSize*2
         TextField{
             id:hourText
             width:hoursTumbler.width
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             text: formatNumber(parseInt(startTime.getHours()))
+            font.pointSize:pointSize
+            selectByMouse: true
             validator: IntValidator { // 设置输入验证器，只允许输入整数
                 bottom: 0
                 top: 23
@@ -124,6 +131,8 @@ Dialog {
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             text: formatNumber(parseInt(startTime.getMinutes()))
+            font.pointSize:pointSize
+            selectByMouse: true
             validator: IntValidator { // 设置输入验证器，只允许输入整数
                 bottom: 0
                 top: 59
@@ -160,18 +169,21 @@ Dialog {
         Row {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
-            spacing:parent.width/10
+            spacing:pointSize*2
 
             Tumbler {
                 id: hoursTumbler
                 model: 24
                 height: tumberContainer.height
-                visibleItemCount: 5
+                width:pointSize*3
+                //visibleItemCount: 5
                 currentIndex: parseInt(startTime.getHours())
                 delegate: TumblerDelegate {
                     width: hoursTumbler.width / hoursTumbler.visibleItemCount
                     text: formatNumber(modelData)
                 }
+                font.pointSize:pointSize*0.8
+                spacing:pointSize
                 // 处理滚轮事件
                MouseArea {
                    anchors.fill: parent
@@ -192,12 +204,15 @@ Dialog {
                 id: minutesTumbler
                 model: 60
                 height: tumberContainer.height
-                visibleItemCount: 5
+                width:pointSize*3
+                //visibleItemCount: 5
                 currentIndex: parseInt(startTime.getMinutes())
                 delegate: TumblerDelegate {
                     width: minutesTumbler.width / minutesTumbler.visibleItemCount
                     text: formatNumber(modelData)
                 }
+                font.pointSize:pointSize*0.8
+                spacing:pointSize
                 // 处理滚轮事件
                MouseArea {
                    anchors.fill: parent

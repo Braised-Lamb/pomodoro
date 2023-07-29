@@ -11,6 +11,7 @@ Dialog {
     //width: 400
     property int pomodoroSet:25
     property int breakTimeSet:5
+    property int pointSize:14
 
     GridLayout{
         anchors.fill:parent
@@ -19,7 +20,9 @@ Dialog {
         anchors.centerIn:parent
 
         Label {
-            text: "Promodoro (minutes):"
+            text: "Promodoro (mins):"
+            
+            font.pointSize:pointSize
         }
 
         TextField {
@@ -28,10 +31,15 @@ Dialog {
             Layout.fillWidth: true
             validator: IntValidator { bottom: 0 }
             text: pomodoroSet.toString() // Default value
+            
+            font.pointSize:pointSize
+            selectByMouse: true
         }
 
         Label {
-            text: "Break (minutes):"
+            text: "Break (mins):"
+            
+            font.pointSize:pointSize
         }
 
         TextField {
@@ -41,6 +49,9 @@ Dialog {
             //width: 100
             validator: IntValidator { bottom: 0 }
             text: breakTimeSet.toString() // Default value
+            
+            font.pointSize:pointSize
+            selectByMouse: true
         }
     }
     signal sendPomodoro(int pomodoroValue)

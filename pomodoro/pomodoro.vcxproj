@@ -84,7 +84,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <None Include="GlobalSettings.qml" />
+    <None Include="ColorPalette.qml" />
     <None Include="qtquickcontrols2.conf" />
     <None Include="SettingDialog.qml" />
     <None Include="TumblerDelegate.qml" />
