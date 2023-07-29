@@ -12,5 +12,6 @@
         <file>imgs/drawer_icon.png</file>
         <file>ColorPalette.qml</file>
         <file>imgs/color_wheel.png</file>
+        <file>imgs/cursor_icon.png</file>
     </qresource>
 </RCC>

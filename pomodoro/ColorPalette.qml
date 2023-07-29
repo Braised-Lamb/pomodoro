@@ -52,6 +52,14 @@ Dialog {
     property int bVal:204
     property var hexVal:"#007ACC"
 
+    function padZero(hexColor) {
+        // 补零函数：确保输入的十六进制颜色代码为六位
+        while (hexColor.length < 7) {
+            hexColor = hexColor+"0";
+        }
+        return hexColor;
+    }
+
     function hexToRgb(hexColor) {
         // 去除可能包含的 # 号
         hexColor = hexColor.replace("#", "");
@@ -60,7 +68,7 @@ Dialog {
         var red = parseInt(hexColor.substr(0, 2), 16);
         var green = parseInt(hexColor.substr(2, 2), 16);
         var blue = parseInt(hexColor.substr(4, 2), 16);
-
+        console.log("rgb in hex",hexColor.substr(0, 2),hexColor.substr(2, 2),hexColor.substr(4, 2))
         // 返回包含三个值的数组
         return [red, green, blue];
     }
@@ -73,7 +81,6 @@ Dialog {
 
         return "#"+hexr+hexg+hexb;
     }
-
     Rectangle {
         id: paletteWheel
         anchors.left:paletteDia.left
@@ -86,14 +93,28 @@ Dialog {
         // Button content
         Image {
             id:wheelImg
-            width: paletteWheel.width
-            height: paletteWheel.height
+            width: Math.min(paletteWheel.width,paletteWheel.height)
+            height: Math.min(paletteWheel.width,paletteWheel.height)
             anchors.centerIn: paletteWheel
             mipmap:true
             //fillMode:Image.PreserveAspectCrop
             fillMode: Image.PreserveAspectFit
             source: "imgs/color_wheel.png"
             //opacity:0.7
+        }
+
+        Image {
+            id: cursorPos
+            // 设置锚点为 paletteWheel，保持相对位置不变
+            //anchors.left: paletteWheel.left
+            //anchors.top: paletteWheel.top
+            source: "imgs/cursor_icon.png"
+            width: 10
+            height: 10
+            visible: true
+            mipmap:true
+            property real hRatio:0
+            property real wRatio:0
         }
 
         // Property to handle play/pause state
@@ -103,8 +124,18 @@ Dialog {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                
+                cursorPos.x = mouseX - cursorPos.width / 2;
+                cursorPos.y = mouseY - cursorPos.height / 2;
+                cursorPos.wRatio=(cursorPos.x-wheelImg.x)/wheelImg.width;
+                cursorPos.hRatio=(cursorPos.y-wheelImg.y)/wheelImg.height;
             }
+        }
+        onWidthChanged:{
+            cursorPos.x=wheelImg.x+cursorPos.wRatio*wheelImg.width;
+            console.log(cursorPos.x);
+        }
+        onHeightChanged:{
+            cursorPos.y=wheelImg.y+cursorPos.hRatio*wheelImg.height;
         }
     }
 
@@ -136,7 +167,7 @@ Dialog {
             Label {
                 id:opalabel
                 text:"Opacity: " + opacitySlider.value.toFixed(2)
-                font.pointSize:pointSize
+                font.pointSize:pointSize*0.8
             }
 
             Slider {
@@ -154,6 +185,7 @@ Dialog {
                     // 例如，如果你有一个元素叫做"opacityElement"，可以使用下面的方式设置透明度：
                     // opacityElement.opacity = opacitySlider.value
                     //opacityLabel.text = "Opacity: " + opacitySlider.value.toFixed(2)
+                    opa=opacitySlider.value.toFixed(2);
                 }
             }
         }
@@ -185,6 +217,9 @@ Dialog {
                 baselineOffset: rlabel.baselineOffset  
                 font.pointSize:pointSize
                 selectByMouse: true
+                onTextChanged:{
+                    updateHex();
+                }
             }
         }
         Row{
@@ -209,6 +244,9 @@ Dialog {
                 baselineOffset: rlabel.baselineOffset
                 font.pointSize:pointSize
                 selectByMouse: true
+                onTextChanged:{
+                    updateHex();
+                }
             }
         }
         Row{
@@ -234,6 +272,9 @@ Dialog {
                 baselineOffset: blabel.baselineOffset
                 font.pointSize:pointSize
                 selectByMouse: true
+                onTextChanged:{
+                    updateHex();
+                }
             }
         }
         Row{
@@ -258,26 +299,45 @@ Dialog {
 
                 onTextChanged:{
                     hexInput.text = hexInput.text.toUpperCase();
-                    if (hexInput.accepted) {
-                        // 输入是有效的十六进制颜色代码，更新颜色方块
-                        colorPreview.color = hexInput.text;
-                        console.log("hexacc",hexToRgb(hexInput.text));
-                        console.log("hexacc",rgbToHex(rInput.text,gInput.text,bInput.text));
-                        console.log("hexacc",hexInput.text);
-                    } 
-                    else {
-                        // 输入无效，设置颜色方块为灰色
-                        hexInput.text=rgbToHex(rInput.text,gInput.text,bInput.text);
-                        console.log("hex",rgbToHex(rInput.text,gInput.text,bInput.text));
+                }
+                onFocusChanged:{
+                    if (!hexInput.activeFocus){
+                        //hexInput.text = hexInput.text.toUpperCase();
+                        console.log("leave hex");
+                        hexVal=padZero(hexInput.text);
+                        colorPreview.color = hexVal;
+                        rVal = hexToRgb(hexVal)[0];
+                        gVal = hexToRgb(hexVal)[1];
+                        bVal = hexToRgb(hexVal)[2];
+                        rInput.text=rVal;
+                        gInput.text=gVal;
+                        bInput.text=bVal;
                     }
+
                 }
             }
         }
 
         Rectangle{
-            id:colorPreview
+            id:colorPreviewBorder
             anchors.bottom:standardButtons.top
-            color: Qt.rgba(1.0, 1.0, 1.0, opacitySlider.value)
+            anchors.top:hexInput.bottom
+            anchors.topMargin:5
+            width:paletteDia.width*0.3
+            height:paletteDia.height*0.2
+            color:Qt.rgba(0.5,0.5,0.5,0.5)
+
+            Rectangle{
+                id:colorPreview
+                //anchors.verticalCenter:
+                anchors{
+                    centerIn:parent
+                }
+                width:parent.width-2
+                height:parent.height-2
+                color: hexVal
+                opacity:opa
+            }
         }
     }
 
@@ -318,5 +378,41 @@ Dialog {
         //console.log("rgb",r,g,b);
         //console.log("hex",hexr,hexg,hexb,hexcode);
         return "#"+hexr+hexg+hexb;
+    }
+
+    function rgbToHsl(r, g, b) {
+        var maxVal = Math.max(r, g, b);
+        var minVal = Math.min(r, g, b);
+        var h, s, l = (maxVal + minVal) / 2;
+
+        if (maxVal === minVal) {
+            h = 0;
+            s = 0;
+        } else {
+            var d = maxVal - minVal;
+            s = l > 0.5 ? d / (2 - maxVal - minVal) : d / (maxVal + minVal);
+
+            if (maxVal === r)
+                h = (g - b) / d + (g < b ? 6 : 0);
+            else if (maxVal === g)
+                h = (b - r) / d + 2;
+            else
+                h = (r - g) / d + 4;
+
+            h /= 6;
+        }
+
+        return [h, s, l];
+    }
+
+    function updateHex(){
+        rVal=Math.min(rInput.text,255);
+        gVal=Math.min(gInput.text,255);
+        bVal=Math.min(bInput.text,255);
+        rInput.text=rVal;
+        gInput.text=gVal;
+        bInput.text=bVal;
+        hexVal=rgbToHex(rVal,gVal,bVal);
+        hexInput.text=hexVal;
     }
 }
