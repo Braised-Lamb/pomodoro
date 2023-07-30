@@ -4,6 +4,7 @@ import QtQuick.Controls 2.4
 import QtQuick.Controls.Material 2.4
 import QtQuick.Layouts 1.11
 import Qt.labs.settings 1.0
+import QtMultimedia 5.10
 
 Window {
     id:root
@@ -19,6 +20,7 @@ Window {
         property int breakTime: 5
         property int duration: 60
         property var circleColor:"#007ACC"
+        property real circleOpacity: 0.6
         fileName: "app_settings.ini"
     }
 
@@ -66,6 +68,7 @@ Window {
                     settingsDrawer.close(); // Close the drawer after opening settings
                 }
             }
+            /*
             // Content of the settings page
             Button {
                 id:toneSet
@@ -76,15 +79,99 @@ Window {
                     settingsDrawer.close(); // Close the drawer after opening settings
                 }
             }
+            */
+            Button {
+                id: settingDia
+                width:colorSet.width
+                text: "Time setting"
+                onClicked: {
+                    settingDialog.open();
+                    settingsDrawer.close();
+                }
+            }
             // Content of the settings page
             Button {
                 id:showAbout
                 width:colorSet.width
                 text: "About"
                 onClicked: {
-                    settingsWindow.open(); // Open the settings window
+                    aboutWin.open(); // Open the settings window
                     settingsDrawer.close(); // Close the drawer after opening settings
                 }
+            }
+        }
+    }
+
+    Dialog{
+        id:aboutWin
+        anchors.centerIn:parent
+        width:parent.width*0.8
+        height:parent.height*0.6
+        ColumnLayout{
+            anchors.centerIn:parent
+            Layout.fillWidth:true
+            width:parent.width
+            spacing:fontMetrics.pointSize*0.4
+            TextInput {
+                text:"A simple Pomodoro application"
+                    
+                font.pixelSize: fontMetrics.pointSize*0.8 // 设置字体大小
+                font.family: "Roboto" // 设置字体为Roboto
+                font.bold: true
+                color: "pink"
+                wrapMode: Text.WordWrap
+                width: aboutWin.width*0.8
+                Layout.fillWidth:true
+                
+                readOnly: true
+                selectByMouse: true
+                Layout.alignment:Qt.AlignLeft
+            }
+            
+            TextInput {
+                text:"Github: https://github.com/Braised-Lamb/pomodoro"
+                    
+                font.pixelSize: fontMetrics.pointSize*0.8 // 设置字体大小
+                font.family: "Roboto" // 设置字体为Roboto
+                font.bold: true
+                color: "pink"
+                wrapMode: Text.WordWrap
+                width: aboutWin.width*0.8
+                Layout.fillWidth:true
+                
+                readOnly: true
+                selectByMouse: true
+                Layout.alignment:Qt.AlignLeft
+            }
+            TextInput {
+                text:"Blog: https://braised-lamb.github.io/"
+                    
+                font.pixelSize: fontMetrics.pointSize*0.8 // 设置字体大小
+                font.family: "Roboto" // 设置字体为Roboto
+                font.bold: true
+                color: "pink"
+                wrapMode: Text.WordWrap
+                width: aboutWin.width*0.8
+                Layout.fillWidth:true
+                
+                readOnly: true
+                selectByMouse: true
+                Layout.alignment:Qt.AlignLeft
+            }
+            TextInput {
+                text:"@ 2023 Braised-Lamb"
+                    
+                font.pixelSize: fontMetrics.pointSize*0.8 // 设置字体大小
+                font.family: "Roboto" // 设置字体为Roboto
+                font.bold: true
+                color: "pink"
+                wrapMode: Text.WordWrap
+                width: aboutWin.width*0.8
+                Layout.fillWidth:true
+                
+                readOnly: true
+                selectByMouse: true
+                Layout.alignment:Qt.AlignLeft
             }
         }
     }
@@ -97,6 +184,16 @@ Window {
         width:0.95*parent.width
         height:0.95*parent.height
         pointSize: fontMetrics.pointSize*0.5
+        defaultVal:globalSettings.circleColor
+
+        onAccepted:{
+            colorWin.defaultVal=colorWin.hexVal;
+            globalSettings.circleColor=colorWin.hexVal;
+            globalSettings.circleOpacity=colorWin.opa;
+            colorWin.initTextWheel(globalSettings.circleColor);
+            globalSettings.sync();
+            countDownTimer.initPomo();
+        }
     }
 
     Rectangle {
@@ -162,14 +259,6 @@ Window {
             }
         }
 
-        Button {
-            id: settingDia
-            text: "setting"
-            onClicked: {
-                settingDialog.open();
-                console.log("settingDialog 字体",settingDialog.pointSize);
-            }
-        }
     }
 
     CountdownTimerCircle {
@@ -187,6 +276,8 @@ Window {
         globalBreakTime:globalSettings.breakTime
         globalDuration:globalSettings.duration
         pointSize: fontMetrics.pointSize
+        globalOpacity:globalSettings.circleOpacity
+        circleColor:globalSettings.circleColor
 
         Component.onCompleted: {
             countDownTimer.initPomo();
@@ -216,9 +307,35 @@ Window {
             setDuration.enabled=true;
             settingDia.enabled=true;
             countDownTimer.initPomo();
+            finishSound.play();
             finishedDia.open();
         }
+        
+        onStartBreakPomodoro:{
+            noticeSound.play();
+        }
+
+        onStartFocusPomodoro:{
+            relaxSound.play();
+        }
+
+        //signal startBreakPomodoro();
+        //signal startFocusPomodoro();
     }
+
+    MediaPlayer {
+        id:finishSound
+        source:"qrc:/videos/finish.mp3"
+    }
+    MediaPlayer {
+        id:relaxSound
+        source:"qrc:/videos/relax.mp3"
+    }
+    MediaPlayer {
+        id:noticeSound
+        source:"qrc:/videos/notice.mp3"
+    }
+
     Dialog{
         id: finishedDia
         standardButtons: Dialog.Ok

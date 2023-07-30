@@ -20,6 +20,7 @@ Item {
     property real progress: 1 // 圆形进度条的进度，范围从0到1
     // 全局透明度属性
     property real globalOpacity: 0.6
+    property var circleColor: "#007ACC"
 
     property int pomodoroNum: 1
     property bool focusStatus: true
@@ -58,6 +59,7 @@ Item {
                         totalTime=(globalBreakTime+correct)*60;
                         progress=1;
                         remainingTime=totalTime;
+                        emit: startBreakPomodoro();
                         countdownTimer.start();
                     }
                     else {
@@ -69,6 +71,7 @@ Item {
                     totalTime=(globalPomodoro+correct+(curPomo>0?0:lastcorrect))*60;
                     progress=1;
                     remainingTime=totalTime;
+                    emit: startFocusPomodoro();
                     countdownTimer.start();
                 }
                 focusStatus=!focusStatus;
@@ -77,6 +80,8 @@ Item {
             canvas.requestPaint();
         }
     }
+    signal startBreakPomodoro();
+    signal startFocusPomodoro();
 
     Canvas {
         id: canvas
@@ -114,7 +119,7 @@ Item {
             ctx.closePath();
             //ctx.stroke();
             // 填充扇形，以红色填充
-            ctx.fillStyle = "#007ACC";
+            ctx.fillStyle = circleColor;
             //ctx.fillStyle = "rgb(0.5,0.5,0.5,0.5)";
             ctx.fill();
 

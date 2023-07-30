@@ -51,6 +51,52 @@ Dialog {
     property int gVal:122
     property int bVal:204
     property var hexVal:"#007ACC"
+    property var defaultVal:"#007ACC"
+    property bool clickCancel: false
+
+    Component.onCompleted:{
+        clickCancel=false;
+        initTextWheel(defaultVal);
+    }
+
+
+    onRejected:{
+        clickCancel=true;
+        initTextWheel(defaultVal);
+    }
+
+    function initTextWheel(val){
+        clickSlider=false;
+        clickWheel=false;
+        hexVal=val;
+        rVal=hexToRgb(hexVal)[0];
+        gVal=hexToRgb(hexVal)[1];
+        bVal=hexToRgb(hexVal)[2];
+
+        rInput.text=rVal;
+        gInput.text=gVal;
+        bInput.text=bVal;
+        hexInput.text=hexVal;
+
+        //console.log(wheelImg.width);
+        // 更新浮标位置
+        var h = rgbToHsl(rVal,gVal,bVal)[0];
+        var s = rgbToHsl(rVal,gVal,bVal)[1];
+        var l = rgbToHsl(rVal,gVal,bVal)[2];
+        
+        console.log("press cancel hex",hslToRgb(h,s,l),"default",defaultVal,"val",val);
+        console.log("press cancel rgb",rVal,gVal,bVal);
+
+        brightnessSlider.value=l;
+        h=(h<180)?h:h-360;
+        var theta=Math.tan(h);
+        var dx=(s/100/2*wheelImg.width)*Math.cos(theta);
+        var dy=(s/100/2*wheelImg.height)*Math.sin(theta);
+        cursorPos.x=wheelImg.width/2+wheelImg.x+dx-cursorPos.width/2;
+        cursorPos.y=wheelImg.height/2+wheelImg.y+dy-cursorPos.height/2;
+        console.log("press cancel hsl",h,s,l,"dxy",dx,dy,"hex",hexVal);
+    }
+
 
     function padZero(hexColor) {
         // 补零函数：确保输入的十六进制颜色代码为六位
@@ -61,6 +107,7 @@ Dialog {
     }
 
     function hexToRgb(hexColor) {
+        //console.log("test",hexColor);
         // 去除可能包含的 # 号
         hexColor = hexColor.replace("#", "");
 
@@ -68,7 +115,7 @@ Dialog {
         var red = parseInt(hexColor.substr(0, 2), 16);
         var green = parseInt(hexColor.substr(2, 2), 16);
         var blue = parseInt(hexColor.substr(4, 2), 16);
-        console.log("rgb in hex",hexColor.substr(0, 2),hexColor.substr(2, 2),hexColor.substr(4, 2))
+        //console.log("rgb in hex",hexColor.substr(0, 2),hexColor.substr(2, 2),hexColor.substr(4, 2))
         // 返回包含三个值的数组
         return [red, green, blue];
     }
@@ -81,6 +128,7 @@ Dialog {
 
         return "#"+hexr+hexg+hexb;
     }
+
     Rectangle {
         id: paletteWheel
         anchors.left:paletteDia.left
@@ -101,6 +149,8 @@ Dialog {
             fillMode: Image.PreserveAspectFit
             source: "imgs/color_wheel.png"
             //opacity:0.7
+            
+
         }
 
         Image {
@@ -115,6 +165,22 @@ Dialog {
             mipmap:true
             property real hRatio:0
             property real wRatio:0
+            onVisibleChanged: {
+                if(!cursorPos.visible) return;
+                var h = rgbToHsl(rVal,gVal,bVal)[0];
+                var s = rgbToHsl(rVal,gVal,bVal)[1];
+                var l = rgbToHsl(rVal,gVal,bVal)[2];
+
+                brightnessSlider.value=l;
+                h=(h<180)?h:h-360;
+                var theta=Math.tan(h);
+                var dx=(s/100/2*wheelImg.width)*Math.cos(theta);
+                var dy=(s/100/2*wheelImg.height)*Math.sin(theta);
+                cursorPos.x=wheelImg.width/2+wheelImg.x+dx-cursorPos.width/2;
+                cursorPos.y=wheelImg.height/2+wheelImg.y+dy-cursorPos.height/2;
+                //console.log(h,s,l);
+                //console.log(cursorPos.x,cursorPos.y);
+            }
         }
 
         // Property to handle play/pause state
@@ -124,20 +190,45 @@ Dialog {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                cursorPos.x = mouseX - cursorPos.width / 2;
-                cursorPos.y = mouseY - cursorPos.height / 2;
+                clickWheel=true;
+                globalMouseX = mouseX;
+                globalMouseY = mouseY;
+
+                // 计算点击位置相对于圆心的距离
+                var deltaX = mouseX - wheelImg.x - wheelImg.width / 2;
+                var deltaY = mouseY - wheelImg.y - wheelImg.height / 2;
+                var distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+                // 计算点击位置相对于圆心的角度
+                var angle = Math.atan2(deltaY, deltaX);
+
+                // 计算限制后的坐标，保证在圆形区域内
+                var limitedDistance = Math.min(distance, wheelImg.width / 2);
+                var limitedX = wheelImg.x + wheelImg.width / 2 + limitedDistance * Math.cos(angle);
+                var limitedY = wheelImg.y + wheelImg.height / 2 + limitedDistance * Math.sin(angle);
+
+
+
+                cursorPos.x = limitedX - cursorPos.width / 2;
+                cursorPos.y = limitedY - cursorPos.height / 2;
                 cursorPos.wRatio=(cursorPos.x-wheelImg.x)/wheelImg.width;
                 cursorPos.hRatio=(cursorPos.y-wheelImg.y)/wheelImg.height;
+                updateRgbFromWheel();
             }
         }
         onWidthChanged:{
+            if (clickCancel) return;
             cursorPos.x=wheelImg.x+cursorPos.wRatio*wheelImg.width;
-            console.log(cursorPos.x);
+            cursorPos.y=wheelImg.y+cursorPos.hRatio*wheelImg.height;
+            //console.log(cursorPos.x);
         }
         onHeightChanged:{
+            if (clickCancel) return;
+            cursorPos.x=wheelImg.x+cursorPos.wRatio*wheelImg.width;
             cursorPos.y=wheelImg.y+cursorPos.hRatio*wheelImg.height;
         }
     }
+
 
     Column {
         //spacing: 20
@@ -152,12 +243,41 @@ Dialog {
                 value: 50 // 默认值
                 stepSize: 1 // 步进值
                 width:paletteWheel.width
+                // MouseArea 用于在点击和拖动时更新 RGB 颜色和 Slider 的值
+                MouseArea {
+                    anchors.fill: parent
+                    property real mouseClickX // 鼠标点击时的 x 坐标
+                    property real sliderClickValue // 点击时 Slider 的值
+
+                    onPressed: {
+                        // 记录鼠标点击时的 x 坐标和 Slider 的值
+                        mouseClickX = mouse.x;
+                        sliderClickValue = brightnessSlider.value;
+                    }
+
+                    onPositionChanged: {
+                        // 鼠标移动时计算 Slider 的新值
+                        var dx = mouse.x - mouseClickX;
+                        var newValue = sliderClickValue + dx / paletteWheel.width * brightnessSlider.to;
+                        // 确保新值在合法范围内
+                        newValue = Math.min(brightnessSlider.to, Math.max(brightnessSlider.from, newValue));
+                        brightnessSlider.value = newValue;
+                        clickSlider=true;
+                    }
+
+                    onClicked: {
+                        // 在点击 MouseArea 时更新 RGB 颜色
+                        //updateRgbFromWheel();
+                    }
+                }
                 onValueChanged: {
                     // 处理亮度变化
                     // brightnessSlider.value表示亮度的值
                     // 这里可以将亮度值应用到对应的元素
                     // 例如，如果你有一个元素叫做"brightnessElement"，可以使用下面的方式设置亮度：
                     // brightnessElement.brightness = brightnessSlider.value
+                    
+                    updateRgbFromWheel();
                 }
             }
         }
@@ -303,7 +423,7 @@ Dialog {
                 onFocusChanged:{
                     if (!hexInput.activeFocus){
                         //hexInput.text = hexInput.text.toUpperCase();
-                        console.log("leave hex");
+                        //console.log("leave hex");
                         hexVal=padZero(hexInput.text);
                         colorPreview.color = hexVal;
                         rVal = hexToRgb(hexVal)[0];
@@ -312,6 +432,19 @@ Dialog {
                         rInput.text=rVal;
                         gInput.text=gVal;
                         bInput.text=bVal;
+
+                        //#007ACC
+                        var h = rgbToHsl(rVal,gVal,bVal)[0];
+                        var s = rgbToHsl(rVal,gVal,bVal)[1];
+                        var l = rgbToHsl(rVal,gVal,bVal)[2];
+
+                        brightnessSlider.value=l;
+                        h=(h<180)?h:h-360;
+                        var theta=Math.tan(h);
+                        var dx=(s/100/2*wheelImg.width)*Math.cos(theta);
+                        var dy=(s/100/2*wheelImg.height)*Math.sin(theta);
+                        cursorPos.x=wheelImg.width/2+wheelImg.x+dx-cursorPos.width/2;
+                        cursorPos.y=wheelImg.height/2+wheelImg.y+dy-cursorPos.height/2;
                     }
 
                 }
@@ -381,8 +514,12 @@ Dialog {
     }
 
     function rgbToHsl(r, g, b) {
-        var maxVal = Math.max(r, g, b);
-        var minVal = Math.min(r, g, b);
+        var red = r / 255;
+        var green = g / 255;
+        var blue = b / 255;
+
+        var maxVal = Math.max(red, green, blue);
+        var minVal = Math.min(red, green, blue);
         var h, s, l = (maxVal + minVal) / 2;
 
         if (maxVal === minVal) {
@@ -392,27 +529,89 @@ Dialog {
             var d = maxVal - minVal;
             s = l > 0.5 ? d / (2 - maxVal - minVal) : d / (maxVal + minVal);
 
-            if (maxVal === r)
-                h = (g - b) / d + (g < b ? 6 : 0);
-            else if (maxVal === g)
-                h = (b - r) / d + 2;
+            if (maxVal === red)
+                h = (green - blue) / d + (green < blue ? 6 : 0);
+            else if (maxVal === green)
+                h = (blue - red) / d + 2;
             else
-                h = (r - g) / d + 4;
+                h = (red - green) / d + 4;
 
-            h /= 6;
+            h = h * 60;
+            if (h < 0) h += 360; // 确保 h 在 0 到 360 的范围内
         }
+
+        s = Math.round(s * 100);
+        l = Math.round(l * 100);
 
         return [h, s, l];
     }
 
+
+
+    // JavaScript 函数，用于判断鼠标是否在某个控件上
+    function isMouseOnControl(x, y, control) {
+        return control.containsMouse
+    }
+
+    // 用于存储鼠标位置的变量
+    property int globalMouseX: 0
+    property int globalMouseY: 0
+    property bool clickWheel: false
+    property bool clickSlider: false
+
     function updateHex(){
+        if (wheelImg.width>0&&wheelImg.height>0&&!isMouseOnControl(globalMouseX,globalMouseY,wheelImg)&&!clickWheel&&!clickSlider&&!clickCancel){
+            rVal=Math.min(rInput.text,255);
+            gVal=Math.min(gInput.text,255);
+            bVal=Math.min(bInput.text,255);
+            rInput.text=rVal;
+            gInput.text=gVal;
+            bInput.text=bVal;
+            hexVal=rgbToHex(rVal,gVal,bVal);
+            hexInput.text=hexVal;
+
+            //console.log(wheelImg.width);
+            // 更新浮标位置
+            var h = rgbToHsl(rVal,gVal,bVal)[0];
+            var s = rgbToHsl(rVal,gVal,bVal)[1];
+            var l = rgbToHsl(rVal,gVal,bVal)[2];
+
+            brightnessSlider.value=l;
+            h=(h<180)?h:h-360;
+            var theta=Math.tan(h);
+            var dx=(s/100/2*wheelImg.width)*Math.cos(theta);
+            var dy=(s/100/2*wheelImg.height)*Math.sin(theta);
+            cursorPos.x=wheelImg.width/2+wheelImg.x+dx-cursorPos.width/2;
+            cursorPos.y=wheelImg.height/2+wheelImg.y+dy-cursorPos.height/2;
+        }
+
+    }
+
+    
+    function updateRgbFromWheel(){
+        if (!clickWheel&&!clickSlider) return;
+        var cox = cursorPos.width/2+cursorPos.x;
+        var coy = cursorPos.height/2+cursorPos.y;
+        var wox = wheelImg.width/2+wheelImg.x;
+        var woy = wheelImg.height/2+wheelImg.y;
+
+        var h = Math.atan2(coy-woy,cox-wox)* 180 / Math.PI;
+        h=(h>0)?h:h+360;
+        var s = Math.sqrt(Math.pow(cox-wox, 2) + Math.pow(coy-woy, 2))/wheelImg.width*100*2;
+        s=(s<wheelImg.width/2)?s:wheelImg.width/2;
+        var l = brightnessSlider.value;
+        
+        //console.log(h,s,l,hslToRgb(parseInt(h),parseInt(s),parseInt(l)),hexToRgb(hslToRgb(h,s,l))[0]);
+        rInput.text=parseInt(hexToRgb(hslToRgb(h,s,l))[0]);
+        gInput.text=parseInt(hexToRgb(hslToRgb(h,s,l))[1]);
+        bInput.text=parseInt(hexToRgb(hslToRgb(h,s,l))[2]);
         rVal=Math.min(rInput.text,255);
         gVal=Math.min(gInput.text,255);
         bVal=Math.min(bInput.text,255);
-        rInput.text=rVal;
-        gInput.text=gVal;
-        bInput.text=bVal;
         hexVal=rgbToHex(rVal,gVal,bVal);
         hexInput.text=hexVal;
+
+        clickWheel=false;
+        clickSlider=false;
     }
 }
