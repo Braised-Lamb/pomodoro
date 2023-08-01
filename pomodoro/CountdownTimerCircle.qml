@@ -1,4 +1,13 @@
-﻿// CountdownTimerCircle.qml
+﻿/*
+ * @Author: Braised-Lamb
+ * @Email: ygaolamb@gmail.com
+ * @Github: https://github.com/Braised-Lamb
+ * @Blog: https://braisedlamb.github.io/
+ * @Date: 2023-08-01 16:53:59
+ * @Last Modified by: Braised-Lamb
+ * @Last Modified time: 2023-08-01 16:53:59
+ * @Description: CountdownTimerCircle.qml
+*/
 
 import QtQuick 2.9
 import QtQuick.Controls 2.4

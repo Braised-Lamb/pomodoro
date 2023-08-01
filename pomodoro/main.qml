@@ -1,3 +1,13 @@
+/*
+ * @Author: Braised-Lamb
+ * @Email: ygaolamb@gmail.com
+ * @Github: https://github.com/Braised-Lamb
+ * @Blog: https://braisedlamb.github.io/
+ * @Date: 2023-08-01 16:54:26
+ * @Last Modified by: Braised-Lamb
+ * @Last Modified time: 2023-08-01 16:54:26
+ * @Description: main window of pomodoro
+*/
 import QtQuick 2.9
 import QtQuick.Window 2.2
 import QtQuick.Controls 2.4

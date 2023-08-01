@@ -1,4 +1,14 @@
-﻿//clockDialog.qml
+﻿/*
+ * @Author: Braised-Lamb
+ * @Email: ygaolamb@gmail.com
+ * @Github: https://github.com/Braised-Lamb
+ * @Blog: https://braisedlamb.github.io/
+ * @Date: 2023-08-01 16:52:55
+ * @Last Modified by: Braised-Lamb
+ * @Last Modified time: 2023-08-01 16:52:55
+ * @Description: clockDialog.qml
+*/
+
 
 import QtQuick 2.11
 import QtQuick.Controls 2.4

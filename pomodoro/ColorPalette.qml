@@ -1,4 +1,14 @@
-﻿import QtQuick 2.5
+﻿/*
+ * @Author: Braised-Lamb
+ * @Email: ygaolamb@gmail.com
+ * @Github: https://github.com/Braised-Lamb
+ * @Blog: https://braisedlamb.github.io/
+ * @Date: 2023-08-01 16:53:16
+ * @Last Modified by: Braised-Lamb
+ * @Last Modified time: 2023-08-01 16:53:16
+ * @Description: Color selector for countdown circle
+*/
+import QtQuick 2.5
 import QtQuick.Controls 2.5
 
 Dialog {

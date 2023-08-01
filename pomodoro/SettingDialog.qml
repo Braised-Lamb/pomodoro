@@ -1,4 +1,14 @@
-﻿import QtQuick 2.3
+﻿/*
+ * @Author: Braised-Lamb
+ * @Email: ygaolamb@gmail.com
+ * @Github: https://github.com/Braised-Lamb
+ * @Blog: https://braisedlamb.github.io/
+ * @Date: 2023-08-01 16:54:43
+ * @Last Modified by: Braised-Lamb
+ * @Last Modified time: 2023-08-01 16:54:43
+ * @Description: time and volumn setting
+*/
+import QtQuick 2.3
 import QtQuick.Controls 2.11
 import QtQuick.Layouts 1.11
 

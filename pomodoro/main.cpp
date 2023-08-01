@@ -1,3 +1,13 @@
+/*
+ * @Author: Braised-Lamb
+ * @Email: ygaolamb@gmail.com
+ * @Github: https://github.com/Braised-Lamb
+ * @Blog: https://braisedlamb.github.io/
+ * @Date: 2023-08-01 16:54:14
+ * @Last Modified by: Braised-Lamb
+ * @Last Modified time: 2023-08-01 16:54:14
+ * @Description: main.cpp
+*/
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQuickStyle>
@@ -11,6 +21,7 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
     app.setWindowIcon(QIcon(":/imgs/tomato_icon.png"));//…Ë÷√◊¥Ã¨¿∏Õº±Í
+    //app.setQuitOnLastWindowClosed(false);
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())
