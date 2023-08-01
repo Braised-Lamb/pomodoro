@@ -320,18 +320,35 @@ Window {
             countDownTimer.initPomo();
             finishSound.play();
             finishedDia.open();
+            root.flags = Qt.Window | Qt.WindowStaysOnTopHint | Qt.CustomizeWindowHint | Qt.WindowTitleHint
+            showWinTimer.start();
         }
         
         onStartBreakPomodoro:{
             noticeSound.play();
+            root.flags = Qt.Window | Qt.WindowStaysOnTopHint | Qt.CustomizeWindowHint | Qt.WindowTitleHint
+            showWinTimer.start();
         }
 
         onStartFocusPomodoro:{
             relaxSound.play();
+            root.flags = Qt.Window | Qt.WindowStaysOnTopHint | Qt.CustomizeWindowHint | Qt.WindowTitleHint
+            showWinTimer.start();
         }
 
         //signal startBreakPomodoro();
         //signal startFocusPomodoro();
+    }
+
+    Timer {
+        id: showWinTimer
+        
+        interval: 100 // 每秒触发一次计时器
+        running: false
+        repeat: false
+        onTriggered: {
+            root.flags = Qt.Window;
+        }
     }
 
     MediaPlayer {
