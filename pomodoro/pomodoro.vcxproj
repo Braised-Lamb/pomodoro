@@ -95,6 +95,15 @@
     <None Include="CountdownTimerCircle.qml" />
     <None Include="main.qml" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="pomodoro.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="imgs\tomato.ico" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
     <Import Project="$(QtMsBuild)\qt.targets" />
