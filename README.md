@@ -7,7 +7,7 @@
 - @Author: Braised-Lamb
 - @Email: ygaolamb@gmail.com
 - @Github: https://github.com/Braised-Lamb
-- @Blog: https://braisedlamb.github.io/
+- @Blog: https://braised-lamb.github.io/
 ---
 
 # Requirements

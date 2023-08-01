@@ -2,7 +2,7 @@
  * @Author: Braised-Lamb
  * @Email: ygaolamb@gmail.com
  * @Github: https://github.com/Braised-Lamb
- * @Blog: https://braisedlamb.github.io/
+ * @Blog: https://braised-lamb.github.io/
  * @Date: 2023-08-01 16:52:55
  * @Last Modified by: Braised-Lamb
  * @Last Modified time: 2023-08-01 16:52:55
