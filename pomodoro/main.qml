@@ -21,6 +21,7 @@ Window {
         property int duration: 60
         property var circleColor:"#007ACC"
         property real circleOpacity: 0.6
+        property real clockVolumn: 1
         fileName: "app_settings.ini"
     }
 
@@ -286,26 +287,26 @@ Window {
         onPlayPomodoro:{
             setEndTime.enabled=false;
             setDuration.enabled=false;
-            settingDia.enabled=false;
+            settingsDrawer.enabled=false;
         }
 
         onPausePomodoro:{
             setEndTime.enabled=false;
             setDuration.enabled=false;
-            settingDia.enabled=false;
+            settingsDrawer.enabled=false;
         }
 
         onStopPomodoro:{
             setEndTime.enabled=true;
             setDuration.enabled=true;
-            settingDia.enabled=true;
+            settingsDrawer.enabled=true;
             countDownTimer.initPomo();
         }
         
         onFinishPomodoro:{
             setEndTime.enabled=true;
             setDuration.enabled=true;
-            settingDia.enabled=true;
+            settingsDrawer.enabled=true;
             countDownTimer.initPomo();
             finishSound.play();
             finishedDia.open();
@@ -374,10 +375,11 @@ Window {
         x: Math.round((parent.width - width) / 2)
         y: Math.round((parent.height - height) / 2)
         width:parent.width*0.9
-        height:parent.height*0.6
+        height:parent.height*0.8
         pomodoroSet:globalSettings.pomodoro
         breakTimeSet:globalSettings.breakTime
         pointSize: fontMetrics.pointSize*0.65
+        mVolumn:globalSettings.clockVolumn
         
         onSendPomodoro:{
             globalSettings.pomodoro=pomodoroValue;
@@ -390,6 +392,21 @@ Window {
             countDownTimer.globalBreakTime=breakTimeValue;
             globalSettings.sync();
             countDownTimer.initPomo();
+        }
+        onValueChanged:{
+            globalSettings.clockVolumn=clockVolumn;
+            globalSettings.sync();
+            noticeSound.volume=globalSettings.clockVolumn;
+            relaxSound.volume=globalSettings.clockVolumn;
+            finishSound.volume=globalSettings.clockVolumn;
+        }
+        onVolumnPreview:{
+            previewSound.volume=clockVolumn;
+            previewSound.play();
+        }
+        MediaPlayer {
+            id:previewSound
+            source:"qrc:/videos/notice.mp3"
         }
     }
 

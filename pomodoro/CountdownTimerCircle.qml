@@ -11,7 +11,7 @@ Item {
     //width: 200
     //height:250
 
-    property int timeInterval:10 // 计时器间隔，提示用
+    property int timeInterval:1000 // 计时器间隔，提示用
     property int offset:25
 
     property int allTime: 60

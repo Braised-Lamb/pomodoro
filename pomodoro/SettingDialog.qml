@@ -12,6 +12,7 @@ Dialog {
     property int pomodoroSet:25
     property int breakTimeSet:5
     property int pointSize:14
+    property real mVolumn:1
 
     GridLayout{
         anchors.fill:parent
@@ -53,14 +54,47 @@ Dialog {
             font.pointSize:pointSize
             selectByMouse: true
         }
+
+        
+        Label {
+            text: "Volume(▶):"
+            
+            font.pointSize:pointSize
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    console.log("Label被点击了");
+                    // 在这里执行你想要的操作
+                    console.log("val",mVolumn,volumnSlider.value)
+                    var clockVolumn=volumnSlider.value/100.0;
+                    emit: volumnPreview(clockVolumn)
+                }
+
+            }
+        }
+
+
+        Slider {
+            id:volumnSlider
+            Layout.fillWidth: true
+            from: 0
+            to: 100
+            value: mVolumn * 100
+            stepSize: 1
+            
+        }
     }
+    signal valueChanged(var clockVolumn)
     signal sendPomodoro(int pomodoroValue)
     signal sendBreakTime(int breakTimeValue)
+    signal volumnPreview(var clockVolumn)
+
     onAccepted: {
             // When the dialog is accepted (OK button clicked),
             // you can access the values entered by the user
             var workTimeValue = parseInt(workTimeInput.text);
             var restTimeValue = parseInt(restTimeInput.text);
+            var clockVolumn=volumnSlider.value/100.0;
 
             // You can use these values as needed
             console.log("Work Time:", workTimeValue, "minutes");
@@ -68,5 +102,6 @@ Dialog {
             
             emit: sendPomodoro(workTimeValue);
             emit: sendBreakTime(restTimeValue);
+            emit: valueChanged(clockVolumn);
         }
 }

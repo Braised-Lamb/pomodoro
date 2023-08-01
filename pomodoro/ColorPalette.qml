@@ -95,6 +95,8 @@ Dialog {
         cursorPos.x=wheelImg.width/2+wheelImg.x+dx-cursorPos.width/2;
         cursorPos.y=wheelImg.height/2+wheelImg.y+dy-cursorPos.height/2;
         console.log("press cancel hsl",h,s,l,"dxy",dx,dy,"hex",hexVal);
+
+        colorPreview.color=hexVal;
     }
 
 
@@ -583,6 +585,7 @@ Dialog {
             var dy=(s/100/2*wheelImg.height)*Math.sin(theta);
             cursorPos.x=wheelImg.width/2+wheelImg.x+dx-cursorPos.width/2;
             cursorPos.y=wheelImg.height/2+wheelImg.y+dy-cursorPos.height/2;
+            colorPreview.color = hexVal;
         }
 
     }
@@ -610,6 +613,8 @@ Dialog {
         bVal=Math.min(bInput.text,255);
         hexVal=rgbToHex(rVal,gVal,bVal);
         hexInput.text=hexVal;
+        
+        colorPreview.color = hexVal;
 
         clickWheel=false;
         clickSlider=false;
