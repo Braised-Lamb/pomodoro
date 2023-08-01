@@ -65,7 +65,7 @@ Item {
                 if (focusStatus) {
                     curPomo-=1;
                     if (curPomo>0){
-                        totalTime=(globalBreakTime+correct)*60;
+                        totalTime=(globalBreakTime)*60;
                         progress=1;
                         remainingTime=totalTime;
                         emit: startBreakPomodoro();
