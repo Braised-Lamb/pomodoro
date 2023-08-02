@@ -253,13 +253,20 @@ Item {
             var cycle=(globalPomodoro+globalBreakTime)*60;
             var restTime = allTime%cycle/60;
             pomodoroNum = allTime/cycle;
-            if (restTime <= globalPomodoro) {
-                pomodoroNum+=1;
+            if (restTime == 0) {
+                correct=globalBreakTime/pomodoroNum;
+                lastcorrect=globalBreakTime%pomodoroNum;
             }
             else {
-                correct=restTime/pomodoroNum;
-                lastcorrect=restTime%pomodoroNum;
+                pomodoroNum+=1;
+
+                lastcorrect=restTime-globalPomodoro;
+                if (lastcorrect > 0){
+                    correct=lastcorrect/pomodoroNum;
+                    lastcorrect%=globalPomodoro;
+                }
             }
+
             totalTime=(globalPomodoro+correct)*60;
         }
         focusStatus=true;
@@ -271,6 +278,7 @@ Item {
         canvas.requestPaint();
         console.log("painting",totalTime);
         console.log(globalPomodoro,globalDuration,correct);
+        statusText.text=(2*(pomodoroNum-curPomo)+(focusStatus?1:0)).toString()+"/"+(pomodoroNum+pomodoroNum-1).toString()+"\tNow:"+(focusStatus?"Focus":"Break");
     }
 
     function resetCount(){  
