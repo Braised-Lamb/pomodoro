@@ -353,15 +353,15 @@ Window {
 
     MediaPlayer {
         id:finishSound
-        source:"qrc:/videos/finish.mp3"
+        source:"qrc:/audios/finish.mp3"
     }
     MediaPlayer {
         id:relaxSound
-        source:"qrc:/videos/relax.mp3"
+        source:"qrc:/audios/relax.mp3"
     }
     MediaPlayer {
         id:noticeSound
-        source:"qrc:/videos/notice.mp3"
+        source:"qrc:/audios/notice.mp3"
     }
 
     Dialog{
@@ -433,7 +433,7 @@ Window {
         }
         MediaPlayer {
             id:previewSound
-            source:"qrc:/videos/notice.mp3"
+            source:"qrc:/audios/notice.mp3"
         }
     }
 

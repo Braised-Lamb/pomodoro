@@ -13,9 +13,9 @@
         <file>ColorPalette.qml</file>
         <file>imgs/color_wheel.png</file>
         <file>imgs/cursor_icon.png</file>
-        <file>videos/finish.mp3</file>
-        <file>videos/notice.mp3</file>
-        <file>videos/relax.mp3</file>
         <file>imgs/tomato_icon.png</file>
+        <file>audios/finish.mp3</file>
+        <file>audios/notice.mp3</file>
+        <file>audios/relax.mp3</file>
     </qresource>
 </RCC>
