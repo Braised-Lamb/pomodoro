@@ -20,7 +20,7 @@ Item {
     //width: 200
     //height:250
 
-    property int timeInterval:1000 // 计时器间隔，提示用
+    property int timeInterval:10 // 计时器间隔，提示用
     property int offset:25
 
     property int allTime: 60
@@ -87,6 +87,7 @@ Item {
             }
             progress = remainingTime / totalTime;
             canvas.requestPaint();
+            statusText.text=(2*(pomodoroNum-curPomo)+(focusStatus?1:0)).toString()+"/"+(pomodoroNum+pomodoroNum-1).toString()+"\tNow:"+(focusStatus?"Focus":"Break");
         }
     }
     signal startBreakPomodoro();
