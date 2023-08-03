@@ -17,5 +17,6 @@
         <file>audios/finish.mp3</file>
         <file>audios/notice.mp3</file>
         <file>audios/relax.mp3</file>
+        <file>imgs/tomato.ico</file>
     </qresource>
 </RCC>
