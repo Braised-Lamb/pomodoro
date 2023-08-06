@@ -34,7 +34,7 @@
     <QtInstall>5.14.2_msvc2017_64</QtInstall>
     <QtModules>quick;quickcontrols2</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
-    <QtQMLDebugEnable>true</QtQMLDebugEnable>
+    <QtQMLDebugEnable>false</QtQMLDebugEnable>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>5.14.2_msvc2017_64</QtInstall>

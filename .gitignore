@@ -361,3 +361,4 @@ MigrationBackup/
 
 # Ignore vscode file
 .vscode/
+/build-pomodoro-Desktop_Qt_5_14_2_MSVC2017_64bit
