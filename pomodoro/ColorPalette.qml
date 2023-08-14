@@ -1,13 +1,17 @@
 ﻿/*
- * @Author: Braised-Lamb
+ * @Author: Braised-Lamb lambsjtu@outlook.com
  * @Email: ygaolamb@gmail.com
  * @Github: https://github.com/Braised-Lamb
  * @Blog: https://braised-lamb.github.io/
- * @Date: 2023-08-01 16:53:16
- * @Last Modified by: Braised-Lamb
- * @Last Modified time: 2023-08-01 16:53:16
+ * @Date: 2023-07-29 17:26:36
+ * @LastEditors: Braised-Lamb
+ * @LastEditTime: 2023-08-14 17:13:42
+ * @FilePath: \pomodoro\pomodoro\ColorPalette.qml
  * @Description: Color selector for countdown circle
-*/
+ * 
+ * Copyright (c) 2023 by Braised-Lamb, All Rights Reserved. 
+ */
+
 import QtQuick 2.5
 import QtQuick.Controls 2.5
 
@@ -74,10 +78,18 @@ Dialog {
         clickCancel=true;
         initTextWheel(defaultVal);
     }
+/*
+    onAccepted:{
+		clickCancel=false;
+		defaultVal=hexVal;
+        initTextWheel(defaultVal);
+	}
+    */
 
     function initTextWheel(val){
         clickSlider=false;
         clickWheel=false;
+        // if (!clickCancel) return;
         hexVal=val;
         rVal=hexToRgb(hexVal)[0];
         gVal=hexToRgb(hexVal)[1];
@@ -98,10 +110,9 @@ Dialog {
         console.log("press cancel rgb",rVal,gVal,bVal);
 
         brightnessSlider.value=l;
-        h=(h<180)?h:h-360;
-        var theta=Math.tan(h);
-        var dx=(s/100/2*wheelImg.width)*Math.cos(theta);
-        var dy=(s/100/2*wheelImg.height)*Math.sin(theta);
+        //h=(h<180)?h:h-360;
+        var dx = hslToPos(h,s,l)[0];
+        var dy = hslToPos(h,s,l)[1];
         cursorPos.x=wheelImg.width/2+wheelImg.x+dx-cursorPos.width/2;
         cursorPos.y=wheelImg.height/2+wheelImg.y+dy-cursorPos.height/2;
         console.log("press cancel hsl",h,s,l,"dxy",dx,dy,"hex",hexVal);
@@ -184,10 +195,9 @@ Dialog {
                 var l = rgbToHsl(rVal,gVal,bVal)[2];
 
                 brightnessSlider.value=l;
-                h=(h<180)?h:h-360;
-                var theta=Math.tan(h);
-                var dx=(s/100/2*wheelImg.width)*Math.cos(theta);
-                var dy=(s/100/2*wheelImg.height)*Math.sin(theta);
+                //h=(h<180)?h:h-360;
+                var dx = hslToPos(h,s,l)[0];
+                var dy = hslToPos(h,s,l)[1];
                 cursorPos.x=wheelImg.width/2+wheelImg.x+dx-cursorPos.width/2;
                 cursorPos.y=wheelImg.height/2+wheelImg.y+dy-cursorPos.height/2;
                 //console.log(h,s,l);
@@ -451,10 +461,8 @@ Dialog {
                         var l = rgbToHsl(rVal,gVal,bVal)[2];
 
                         brightnessSlider.value=l;
-                        h=(h<180)?h:h-360;
-                        var theta=Math.tan(h);
-                        var dx=(s/100/2*wheelImg.width)*Math.cos(theta);
-                        var dy=(s/100/2*wheelImg.height)*Math.sin(theta);
+                        var dx = hslToPos(h,s,l)[0];
+                        var dy = hslToPos(h,s,l)[1];
                         cursorPos.x=wheelImg.width/2+wheelImg.x+dx-cursorPos.width/2;
                         cursorPos.y=wheelImg.height/2+wheelImg.y+dy-cursorPos.height/2;
                     }
@@ -558,7 +566,13 @@ Dialog {
         return [h, s, l];
     }
 
-
+    function hslToPos(h,s,l) {
+        var theta=(h<180)?h:h-360;//Math.atan(h);
+        theta*=2*Math.PI/360;
+        var dx=(s/100/2*wheelImg.width)*Math.cos(theta);
+        var dy=(s/100/2*wheelImg.height)*Math.sin(theta);
+        return [dx,dy];
+    }
 
     // JavaScript 函数，用于判断鼠标是否在某个控件上
     function isMouseOnControl(x, y, control) {
@@ -589,10 +603,9 @@ Dialog {
             var l = rgbToHsl(rVal,gVal,bVal)[2];
 
             brightnessSlider.value=l;
-            h=(h<180)?h:h-360;
-            var theta=Math.tan(h);
-            var dx=(s/100/2*wheelImg.width)*Math.cos(theta);
-            var dy=(s/100/2*wheelImg.height)*Math.sin(theta);
+            
+            var dx = hslToPos(h,s,l)[0];
+            var dy = hslToPos(h,s,l)[1];
             cursorPos.x=wheelImg.width/2+wheelImg.x+dx-cursorPos.width/2;
             cursorPos.y=wheelImg.height/2+wheelImg.y+dy-cursorPos.height/2;
             colorPreview.color = hexVal;
@@ -614,7 +627,7 @@ Dialog {
         s=(s<wheelImg.width/2)?s:wheelImg.width/2;
         var l = brightnessSlider.value;
         
-        //console.log(h,s,l,hslToRgb(parseInt(h),parseInt(s),parseInt(l)),hexToRgb(hslToRgb(h,s,l))[0]);
+        console.log("updateRgbFrmWheel",h,s,l,hslToRgb(parseInt(h),parseInt(s),parseInt(l)),hexToRgb(hslToRgb(h,s,l))[0]);
         rInput.text=parseInt(hexToRgb(hslToRgb(h,s,l))[0]);
         gInput.text=parseInt(hexToRgb(hslToRgb(h,s,l))[1]);
         bInput.text=parseInt(hexToRgb(hslToRgb(h,s,l))[2]);

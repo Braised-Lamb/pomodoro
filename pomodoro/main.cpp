@@ -1,13 +1,17 @@
 /*
- * @Author: Braised-Lamb
+ * @Author: Braised-Lamb lambsjtu@outlook.com
  * @Email: ygaolamb@gmail.com
  * @Github: https://github.com/Braised-Lamb
  * @Blog: https://braised-lamb.github.io/
- * @Date: 2023-08-01 16:54:14
- * @Last Modified by: Braised-Lamb
- * @Last Modified time: 2023-08-01 16:54:14
- * @Description: main.cpp
-*/
+ * @Date: 2023-07-27 18:12:32
+ * @LastEditors: Braised-Lamb
+ * @LastEditTime: 2023-08-14 17:14:45
+ * @FilePath: \pomodoro\pomodoro\main.cpp
+ * @Description: 
+ * 
+ * Copyright (c) 2023 by Braised-Lamb, All Rights Reserved. 
+ */
+
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQuickStyle>
