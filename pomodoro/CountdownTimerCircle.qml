@@ -280,8 +280,9 @@ Item {
         countdownTimer.stop();
         countdownTimer.interval=timeInterval;
         canvas.requestPaint();
-        console.log("painting",totalTime);
-        console.log(globalPomodoro,globalDuration,correct);
+        //console.log("painting",totalTime);
+        //console.log(globalPomodoro+correct,globalBreakTime,globalDuration,correct,pomodoroNum);
+        //console.log((globalPomodoro+correct)*pomodoroNum+lastcorrect, lastcorrect,globalBreakTime*pomodoroNum);
         statusText.text=(2*(pomodoroNum-curPomo)+(focusStatus?1:0)).toString()+"/"+(pomodoroNum+pomodoroNum-1).toString()+"\tNow:"+(focusStatus?"Focus":"Break");
     }
 
