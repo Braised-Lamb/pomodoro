@@ -5,7 +5,7 @@
  * @Blog: https://braised-lamb.github.io/
  * @Date: 2023-07-27 18:12:32
  * @LastEditors: Braised-Lamb
- * @LastEditTime: 2023-08-14 17:16:13
+ * @LastEditTime: 2023-10-24 09:49:19
  * @FilePath: \pomodoro\pomodoro\CountdownTimerCircle.qml
  * @Description: 
  * 
